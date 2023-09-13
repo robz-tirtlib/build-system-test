@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Iterable, Iterator
+from typing import Iterable
 
 import yaml
 
@@ -15,9 +15,31 @@ class Task:
     def __init__(self, name: str, dependencies: list[Task] = None) -> None:
         self.name: str = name
         self.dependencies: list[Task] = [] if dependencies is None else dependencies
+        self.id: int | None = None
+        self.visited = 0
 
     def add_dependency(self, dependency: Task) -> None:
         self.dependencies.append(dependency)
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, type(self)):
+            raise ValueError
+
+        return self.name == other.name
+
+
+class TasksIterator:
+
+    def __init__(self, tasks: list[Task]) -> None:
+        self._tasks: list[Task] = tasks
+        self._i = 0
+
+    def __next__(self) -> Task:
+        if self._i < len(self._tasks):
+            self._i += 1
+            return self._tasks[self._i - 1]
+
+        raise StopIteration
 
 
 class Tasks:
@@ -40,17 +62,33 @@ class Tasks:
             if task.name == name:
                 return task
 
-    def __iter__(self) -> Iterator:
-        self._i = 0
-        self._tasks_frozen = self._tasks[:]
-        return self
+    def sort(self) -> None:
+        val = 0
 
-    def __next__(self) -> Task:
-        if self._i < len(self._tasks_frozen):
-            self._i += 1
-            return self._tasks_frozen[self._i - 1]
+        for current_task in tasks:
+            in_dependencies = False
 
-        raise StopIteration
+            for task in tasks:
+                if current_task == task:
+                    continue
+
+                if current_task in task.dependencies:
+                    in_dependencies = True
+                    break
+
+            if not in_dependencies:
+                self._sort_component(current_task, val)
+                val += 1
+
+    def _sort_component(self, current_task: Task, cur_id: int) -> None:
+        if current_task.id is None or current_task.id < cur_id:
+            current_task.id = cur_id
+
+        for dependency in current_task.dependencies:
+            self._sort_component(dependency, cur_id + 1)
+
+    def __iter__(self) -> TasksIterator:
+        return TasksIterator(self._tasks[:])
 
 
 class Build:
@@ -62,7 +100,7 @@ tasks_path: Path = Path("tasks.yaml")
 builds_path: Path = Path("builds.yaml")
 
 
-def parse_task(task: dict, tasks: Tasks) -> Task:
+def parse_task(task: dict, tasks: Tasks) -> None:
     if "name" not in task:
         raise ValueError("All tasks should have name attribute.")
 
@@ -86,8 +124,6 @@ def parse_task(task: dict, tasks: Tasks) -> Task:
 
         current_task.add_dependency(dependency_task)
 
-    return current_task
-
 
 def parse_tasks(tasks_path: Path) -> Tasks:
     tasks: Tasks = Tasks()
@@ -100,12 +136,9 @@ def parse_tasks(tasks_path: Path) -> Tasks:
 
         for task in tasks_data["tasks"]:
             task = parse_task(task, tasks)
-            tasks.add_task(task)
 
     return tasks
 
 
 tasks: Tasks = parse_tasks(tasks_path)
-
-for task in tasks:
-    print(task.n)
+tasks.sort()
