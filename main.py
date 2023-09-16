@@ -17,7 +17,6 @@ class Task:
         self.name: str = name
         self.dependencies: list[Task] = [] if dependencies is None else dependencies
         self.id: int | None = None
-        self.visited = 0
 
     def add_dependency(self, dependency: Task) -> None:
         self.dependencies.append(dependency)
