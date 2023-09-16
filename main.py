@@ -6,6 +6,7 @@ import yaml
 
 from pathlib import Path
 
+# TODO: detect cyclic dependencies
 # TODO: redefinition of tasks.yaml and builds.yaml paths
 # TODO: parsing input arguments
 
@@ -140,5 +141,6 @@ def parse_tasks(tasks_path: Path) -> Tasks:
     return tasks
 
 
-tasks: Tasks = parse_tasks(tasks_path)
-tasks.sort()
+if __name__ == "__main__":
+    tasks: Tasks = parse_tasks(tasks_path)
+    tasks.sort()
