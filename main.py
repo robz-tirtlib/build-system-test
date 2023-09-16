@@ -65,18 +65,8 @@ class Tasks:
     def sort(self) -> None:
         val = 0
 
-        for current_task in tasks:
-            in_dependencies = False
-
-            for task in tasks:
-                if current_task == task:
-                    continue
-
-                if current_task in task.dependencies:
-                    in_dependencies = True
-                    break
-
-            if not in_dependencies:
+        for current_task in self._tasks:
+            if not current_task.dependencies:
                 self._sort_component(current_task, val)
                 val += 1
 
@@ -84,8 +74,9 @@ class Tasks:
         if current_task.id is None or current_task.id < cur_id:
             current_task.id = cur_id
 
-        for dependency in current_task.dependencies:
-            self._sort_component(dependency, cur_id + 1)
+        for task in self._tasks:
+            if current_task in task.dependencies:
+                self._sort_component(task, cur_id + 1)
 
     def __iter__(self) -> TasksIterator:
         return TasksIterator(self._tasks[:])

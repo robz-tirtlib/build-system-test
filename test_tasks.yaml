@@ -1,0 +1,24 @@
+tasks:
+- name: 1
+  dependencies: []
+- name: 2
+  dependencies:
+  - 1
+- name: 3
+  dependencies:
+  - 1
+- name: 4
+  dependencies:
+  - 2
+- name: 5
+  dependencies: []
+- name: 6
+  dependencies: []
+- name: 7
+  dependencies:
+  - 5
+  - 6
+- name: 8
+  dependencies:
+  - 4
+  - 7
