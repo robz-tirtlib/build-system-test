@@ -1,0 +1,11 @@
+builds:
+- name: first
+  tasks:
+  - 1
+  - 4
+  - 3
+- name: second
+  tasks:
+  - 1
+  - 5
+  - 8

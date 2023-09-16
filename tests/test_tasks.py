@@ -1,14 +1,4 @@
-import pytest
-
-
-from main import Task, Tasks, parse_tasks
-from conftest import TEST_TASKS_PATH
-
-
-@pytest.fixture
-def tasks():
-    _tasks: Tasks = parse_tasks(TEST_TASKS_PATH)
-    yield _tasks
+from tasks import Tasks, Task
 
 
 def test_all_tasks_created(tasks: Tasks):
@@ -32,8 +22,6 @@ def test_tasks_dependencies(tasks: Tasks):
 
 
 def test_tasks_sorting(tasks: Tasks):
-    tasks.sort()
-
     assert tasks.get_task(1).id < tasks.get_task(2).id
     assert tasks.get_task(1).id < tasks.get_task(3).id
     assert tasks.get_task(3).id < tasks.get_task(4).id
