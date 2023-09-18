@@ -6,6 +6,8 @@ import yaml
 
 from pathlib import Path
 
+from utils import convert_dict_args_to_str
+
 
 class Task:
 
@@ -51,7 +53,7 @@ class Tasks:
 
     def parse_tasks(self, tasks_path: Path) -> None:
         with open(tasks_path, 'r') as file:
-            tasks_data = yaml.safe_load(file)
+            tasks_data = convert_dict_args_to_str(yaml.safe_load(file))
 
             if "tasks" not in tasks_data:
                 raise ValueError("No tasks found.")

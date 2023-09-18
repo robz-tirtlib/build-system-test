@@ -11,8 +11,8 @@ def test_builds_created(builds: Builds):
         builds_names.remove(build.name)
 
     assert builds_names == []
-    assert first.get_tasks() == [Task(1), Task(3), Task(4)]
+    assert first.get_tasks() == [Task('1'), Task('3'), Task('4')]
 
     second: Build = builds.get_build("second")
 
-    assert second.get_tasks()[-1] == Task(8)
+    assert second.get_tasks()[-1] == Task('8')

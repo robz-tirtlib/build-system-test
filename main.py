@@ -1,22 +1,27 @@
 from __future__ import annotations
 
-from pathlib import Path
+from docopt import docopt
 
 from tasks import Tasks
 from builds import Builds
+from resolver import Resolver
+
+from utils import validate_cli_args, get_paths
+
+from docopt_message import doc
 
 # TODO: detect cyclic dependencies
-# TODO: redefinition of tasks.yaml and builds.yaml paths
-# TODO: parsing input arguments
-
-
-tasks_path: Path = Path("test_tasks.yaml")
-builds_path: Path = Path("test_builds.yaml")
 
 
 if __name__ == "__main__":
+    args = validate_cli_args(docopt(doc))
+    tasks_path, builds_path = get_paths(args)
+
     tasks: Tasks = Tasks()
     tasks.parse_tasks(tasks_path)
     tasks.sort()
     builds: Builds = Builds()
     builds.parse_builds(builds_path, tasks)
+
+    resolver: Resolver = Resolver(args, tasks, builds)
+    resolver.answer_user()

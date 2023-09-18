@@ -4,6 +4,8 @@ import yaml
 
 from pathlib import Path
 
+from utils import convert_dict_args_to_str
+
 
 class Build:
 
@@ -57,7 +59,7 @@ class Builds:
 
     def parse_builds(self, builds_path: Path, tasks: Tasks) -> None:
         with open(builds_path, 'r') as file:
-            builds_data = yaml.safe_load(file)
+            builds_data = convert_dict_args_to_str(yaml.safe_load(file))
 
             if "builds" not in builds_data:
                 raise ValueError("No builds found.")
@@ -80,7 +82,7 @@ class Builds:
             task_obj = tasks.get_task(task)
 
             if task_obj is None:
-                error_msg = f"Task {task} was not mentioned intasks file."
+                error_msg = f"Task {task} was not mentioned in tasks file."
                 raise ValueError(error_msg)
 
             current_build.add_task(task_obj)
