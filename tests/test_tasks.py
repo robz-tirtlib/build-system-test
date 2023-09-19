@@ -1,4 +1,7 @@
+import pytest
+
 from tasks import Tasks, Task
+from conftest import TEST_CYCLIC_TASKS_PATH
 
 
 def test_all_tasks_created(tasks: Tasks):
@@ -29,3 +32,9 @@ def test_tasks_sorting(tasks: Tasks):
     assert tasks.get_task('5').id < tasks.get_task('7').id
     assert tasks.get_task('6').id < tasks.get_task('7').id
     assert tasks.get_task('7').id < tasks.get_task('8').id
+
+
+def test_cyclic_dependencies_detection() -> None:
+    with pytest.raises(ValueError, match="Cyclic dependencies are detected."):
+        _tasks: Tasks = Tasks()
+        _tasks.parse_tasks(TEST_CYCLIC_TASKS_PATH)

@@ -1,0 +1,10 @@
+tasks:
+- name: 1
+  dependencies:
+  - 2
+- name: 2
+  dependencies:
+  - 3
+- name: 3
+  dependencies:
+  - 1

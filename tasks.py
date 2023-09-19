@@ -61,6 +61,32 @@ class Tasks:
             for task in tasks_data["tasks"]:
                 self._parse_task(task)
 
+        self._detect_cyclic_dependencies()
+
+    def _detect_cyclic_dependencies(self) -> None:
+        cycle = True
+        for task in self._tasks:
+            if not task.dependencies:
+                self._dfs(task, set(), set())
+                cycle = False
+
+        if cycle:
+            raise ValueError("Cyclic dependencies are detected.")
+
+    def _dfs(self, cur_task: Task, visited: set[str],
+             cur_path: set[str]) -> None:
+        if cur_task.name in cur_path:
+            raise ValueError("Cyclic dependencies are detected.")
+
+        visited.add(cur_task.name)
+        cur_path.add(cur_task.name)
+
+        for dependency in cur_task.dependencies:
+            if dependency.name not in visited:
+                self._dfs(dependency, visited, cur_path)
+
+        cur_path.remove(cur_task.name)
+
     def _parse_task(self, task: dict) -> None:
         if "name" not in task:
             raise ValueError("All tasks should have name attribute.")

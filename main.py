@@ -10,7 +10,7 @@ from utils import validate_cli_args, get_paths
 
 from docopt_message import doc
 
-# TODO: detect cyclic dependencies
+# TODO: add README
 
 
 if __name__ == "__main__":
