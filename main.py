@@ -10,8 +10,6 @@ from utils import validate_cli_args, get_paths
 
 from docopt_message import doc
 
-# TODO: add README
-
 
 if __name__ == "__main__":
     args = validate_cli_args(docopt(doc))
