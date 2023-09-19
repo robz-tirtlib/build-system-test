@@ -3,11 +3,11 @@
 Build system is capable of:
 - circular dependencies detection
 - topological sorting of dependencies
-- interacting with lists of tasks and builds via CLI
+- interacting with data via CLI
 
 # Installation
 
-Create and activate virtual environment"
+Create and activate virtual environment
 ```
 py -m venv .venv
 ```
